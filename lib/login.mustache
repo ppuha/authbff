@@ -1,0 +1,10 @@
+<head></head>
+<body>
+  <ul>
+    {{#idps}}
+    <form method="POST" action="/login">
+      <input type="submit" value="{{.}}"></input>
+    </form>
+    {{/idps}}
+  </ul>
+</body>

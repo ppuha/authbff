@@ -1,0 +1,4 @@
+(library
+ (name authbff)
+ (libraries dream mustache cohttp cohttp-lwt-unix)
+ (preprocess (pps lwt_ppx)))
