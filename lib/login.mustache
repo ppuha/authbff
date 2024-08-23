@@ -1,9 +1,11 @@
-<head></head>
+<head>
+</head>
 <body>
   <ul>
     {{#idps}}
     <form method="POST" action="/login">
-      <input type="submit" value="{{.}}"></input>
+      <input type="submit" value="{{name}}"></input>
+      <input type="hidden" value="{{name}}"></input>
     </form>
     {{/idps}}
   </ul>

@@ -1,30 +1,29 @@
-let read_lines ch =
-  let rec read' ch acc =
-    try
-      let line = input_line ch in
-      read' ch (line::acc)
-    with
-      | End_of_file -> acc
-  in read' ch [] |> List.rev
+open Idp
+
+let idps = [ {name = "zitadel"} ]
+
+let mustache_of_idp idp = `O [ ("name", `String idp.name) ]
 
 let get _req =
   let ic = open_in "./lib/login.mustache" in
-  let lines = read_lines ic in
+  let lines = Util.read_lines ic in
   let content = lines |> String.concat "\n" in
   let templ = Mustache.of_string content in
   Mustache.render templ (
     `O [
-      "idps", `A [
-        `String "/login";
-        `String "/login2"
-      ]
+      "idps", `A (idps |> List.map mustache_of_idp)
     ]
   )
   |> Dream.html
 
-let post _req =
-  let%lwt resp = Auth.auth () in
-  Dream.html resp
+let post req =
+  let _ = match%lwt Dream.form ~csrf:false req with
+  | `Ok form -> Util.show_form form |> print_endline;
+    Lwt.return_unit
+  | _ -> print_endline "error";
+    Lwt.return_unit
+  in
+  Dream.redirect req (Auth.auth_url)
 
 let redirect_get req =
   match Dream.query req "code" with
