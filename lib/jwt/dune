@@ -1,0 +1,3 @@
+(library
+    (name jwt)
+    (libraries base64))

@@ -1,4 +1,4 @@
 (library
  (name authbff)
- (libraries dream mustache cohttp cohttp-lwt-unix uuidm)
- (preprocess (pps lwt_ppx)))
+ (libraries dream mustache cohttp cohttp-lwt-unix uuidm yojson jwt)
+ (preprocess (pps lwt_ppx ppx_yojson_conv)))

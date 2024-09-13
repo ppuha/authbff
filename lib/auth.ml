@@ -1,7 +1,8 @@
 open Cohttp_lwt_unix
+open Ppx_yojson_conv_lib.Yojson_conv
 
 module Client = struct
-  type client = {
+  type t = {
     id : string;
     secret : string;
     redirect_uri : Uri.t;
@@ -48,5 +49,13 @@ module Client = struct
     base_url = "http://localhost:8080/oauth/v2/authorize" |> Uri.of_string;
     token_url = "http://localhost:8080/oauth/v2/token" |> Uri.of_string;
   }
+end
 
+module AuthResult = struct
+  type t = {
+    access_token : string;
+    token_type : string;
+    expires_in : int;
+    id_token : string;
+  }[@@deriving yojson]
 end
