@@ -1,7 +1,5 @@
 open Authbff
 
-module H = Handler.Make (Store.InMem)
-
 let cors_middleware inner_handler req =
   let new_headers = [
     ("Allow", "OPTIONS, GET, HEAD, POST");
@@ -18,10 +16,10 @@ let cors_middleware inner_handler req =
 
 let () =
   Dream.router [
-    Dream.get "/login" H.get;
-    Dream.post "/login" (H.post Handler.client);
-    Dream.get "/redirect" (H.redirect_get Handler.client);
-    Dream.get "/user" (cors_middleware H.user_get);
+    Dream.get "/login" Handler.get;
+    Dream.post "/login" (Handler.post Handler.client);
+    Dream.get "/redirect" (Handler.redirect_get Handler.client);
+    Dream.get "/user" (cors_middleware Handler.user_get);
     Dream.options "/login" (fun _req ->
       Dream.respond ~headers:[ ("Allow", "OPTIONS, GET, HEAD, POST") ] "");
   ]
