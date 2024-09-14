@@ -43,6 +43,17 @@ module Make (S : Store.S with type key = string) = struct
       let result = resp |> Yojson.Safe.from_string |> AuthResult.t_of_yojson in
       let id_token = result.id_token |> Jwt.Token.parse |> Option.get in
       let _ = S.persist "client" id_token in
-      Dream.html (id_token |> Jwt.Token.decode_payload)
+      let%lwt _ =  Dream.set_session_field req "token" (id_token |> Jwt.Token.to_string ) in
+      Dream.html "<a href='http://localhost:8844/user'>User data</a>"
     | None -> Dream.html "empty"
+
+  let user_get req =
+    match Dream.session_field req "token" with
+    | Some token ->
+      token
+      |> Jwt.Token.parse
+      |> Option.get
+      |> Jwt.Token.decode_payload
+      |> Dream.html
+    | None -> Dream.html "Not authenticated"
 end
