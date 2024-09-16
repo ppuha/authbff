@@ -5,7 +5,7 @@
     {{#idps}}
     <form method="POST" action="/login">
       <input type="submit" value="{{name}}"></input>
-      <input type="hidden" value="{{name}}"></input>
+      <input type="hidden" name="name" value="{{name}}"></input>
     </form>
     {{/idps}}
   </ul>

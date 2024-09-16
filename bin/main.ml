@@ -17,8 +17,8 @@ let cors_middleware inner_handler req =
 let () =
   Dream.router [
     Dream.get "/login" Handler.get;
-    Dream.post "/login" (Handler.post Handler.client);
-    Dream.get "/redirect" (Handler.redirect_get Handler.client);
+    Dream.post "/login" Handler.post;
+    Dream.get "/redirect/:idp" Handler.redirect_get;
     Dream.get "/user" (cors_middleware Handler.user_get);
     Dream.options "/login" (fun _req ->
       Dream.respond ~headers:[ ("Allow", "OPTIONS, GET, HEAD, POST") ] "");
