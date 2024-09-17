@@ -36,7 +36,7 @@ let redirect_get req =
   match Dream.query req "code" with
   | Some code ->
     let%lwt resp = get_token idp code in
-    let result = resp |> Yojson.Safe.from_string |> AuthResult.t_of_yojson in
+    let result = resp |> Yojson.Safe.from_string |> auth_result_of_yojson in
     let id_token = result.id_token |> Jwt.Token.parse |> Option.get in
     let%lwt _ =  Dream.set_session_field req token_field (id_token |> Jwt.Token.to_string ) in
     Dream.html "<a href='http://localhost:8844/user'>User data</a>"

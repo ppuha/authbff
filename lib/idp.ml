@@ -46,14 +46,12 @@ let get_token idp code =
   in
   resp_body |> Cohttp_lwt.Body.to_string
 
-module AuthResult = struct
-  type t = {
-    access_token : string;
-    token_type : string;
-    expires_in : int;
-    id_token : string;
-  }[@@deriving yojson]
-end
+type auth_result = {
+  access_token : string;
+  token_type : string;
+  expires_in : int;
+  id_token : string;
+}[@@deriving yojson]
 
 module Store = struct
   let idps : (string, t) Hashtbl.t = Hashtbl.create 20

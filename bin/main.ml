@@ -11,7 +11,6 @@ let cors_middleware inner_handler req =
   new_headers
   |> List.map (fun (key, value) -> Dream.add_header response key value)
   |> ignore;
-
   response |> Lwt.return
 
 let () =
