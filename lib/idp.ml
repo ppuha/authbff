@@ -14,7 +14,7 @@ type t = {
   client : client;
 }
 
-let auth_url idp =
+let auth_url idp redirect_uri =
   Uri.add_query_params'
     idp.base_url
     [
@@ -23,7 +23,7 @@ let auth_url idp =
       ("redirect_uri", idp.client.redirect_uri |> Uri.to_string);
       ("response_type", "code");
       ("scope", "openid");
-      ("state", Uuidm.ns_X500 |> Uuidm.to_string)
+      ("state", redirect_uri)
     ]
 
 let basic_header client =
