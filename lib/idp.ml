@@ -22,7 +22,7 @@ let auth_url idp redirect_uri =
       ("client_secret", idp.client.secret);
       ("redirect_uri", idp.client.redirect_uri |> Uri.to_string);
       ("response_type", "code");
-      ("scope", "openid");
+      ("scope", "openid email profile");
       ("state", redirect_uri)
     ]
 
