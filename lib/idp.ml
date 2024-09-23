@@ -53,9 +53,28 @@ type auth_result = {
   id_token : string;
 }[@@deriving yojson]
 
-module Store = struct
-  let idps : (string, t) Hashtbl.t = Hashtbl.create 20
+module type Store = sig
+  val get : string -> t option
+  val get_all : unit -> t list
+end
+
+module InMemStore = struct
+  let idps : (string, t) Hashtbl.t = Hashtbl.create 5
   let add idp = Hashtbl.add idps idp.name idp
-  let get idp_name = Hashtbl.find idps idp_name
+  let get idp_name = Hashtbl.find_opt idps idp_name
   let get_all () = Hashtbl.to_seq idps |> List.of_seq |> List.map snd
+
+  let init =
+    let zitadel = {
+      name = "zitadel";
+      base_url = "http://localhost:8080/oauth/v2/authorize" |> Uri.of_string;
+      token_url = "http://localhost:8080/oauth/v2/token" |> Uri.of_string;
+      client =  {
+        id = "281416810018963459";
+        secret = "0hbZVND7ZJhDCXYgWWhVOaUUQvtg4lla0BDwFrVLxWEM4sflhITm584aZclSggVE";
+        redirect_uri = "http://localhost:8844/redirect/zitadel" |> Uri.of_string;
+      }
+    }
+    in
+    add zitadel
 end

@@ -13,12 +13,14 @@ let cors_middleware inner_handler req =
   |> ignore;
   response |> Lwt.return
 
+    module H = Handler.Make (Idp.InMemStore)
+
 let () =
   Dream.router [
-    Dream.get "/login" Handler.get;
-    Dream.post "/login" Handler.post;
-    Dream.get "/redirect/:idp" Handler.redirect_get;
-    Dream.get "/user" (cors_middleware Handler.user_get);
+    Dream.get "/login" H.get;
+    Dream.post "/login" H.post;
+    Dream.get "/redirect/:idp" H.redirect_get;
+    Dream.get "/user" (cors_middleware H.user_get);
     Dream.options "/login" (fun _req ->
       Dream.respond ~headers:[ ("Allow", "OPTIONS, GET, HEAD, POST") ] "");
   ]
