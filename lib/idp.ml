@@ -1,18 +1,27 @@
 open Cohttp_lwt_unix
 open Ppx_yojson_conv_lib.Yojson_conv
 
+type uri = Uri.t
+let yojson_of_uri (uri : Uri.t) = `String (Uri.to_string uri)
+let uri_of_yojson (yojson : Yojson.Safe.t) =
+  match yojson with
+  | `String uri -> Uri.of_string uri
+  | _ -> failwith "parse error"
+
 type client = {
   id : string;
   secret : string;
-  redirect_uri : Uri.t;
-}
+  redirect_uri : uri;
+}[@@deriving yojson]
 
 type t = {
   name : string;
-  base_url : Uri.t;
-  token_url : Uri.t;
+  base_url : uri;
+  token_url : uri;
   client : client;
-}
+}[@@deriving yojson]
+
+type idp_list = t list [@@deriving yojson]
 
 let auth_url idp redirect_uri =
   Uri.add_query_params'
@@ -58,23 +67,19 @@ module type Store = sig
   val get_all : unit -> t list
 end
 
-module InMemStore = struct
-  let idps : (string, t) Hashtbl.t = Hashtbl.create 5
-  let add idp = Hashtbl.add idps idp.name idp
-  let get idp_name = Hashtbl.find_opt idps idp_name
-  let get_all () = Hashtbl.to_seq idps |> List.of_seq |> List.map snd
+module type File = sig
+  val path : string
+end
 
-  let init =
-    let zitadel = {
-      name = "zitadel";
-      base_url = "http://localhost:8080/oauth/v2/authorize" |> Uri.of_string;
-      token_url = "http://localhost:8080/oauth/v2/token" |> Uri.of_string;
-      client =  {
-        id = "281416810018963459";
-        secret = "0hbZVND7ZJhDCXYgWWhVOaUUQvtg4lla0BDwFrVLxWEM4sflhITm584aZclSggVE";
-        redirect_uri = "http://localhost:8844/redirect/zitadel" |> Uri.of_string;
-      }
-    }
-    in
-    add zitadel
+module FileStore (F : File)= struct
+  let path = F.path
+
+  let get_all () =
+    let content = Util.read_file path in
+    Yojson.Safe.from_string content
+    |> idp_list_of_yojson
+
+  let get idp_name =
+    get_all ()
+    |> List.find_opt (fun idp -> idp.name = idp_name)
 end

@@ -1,6 +1,6 @@
 open Authbff
 
-module Idp_store = Idp.InMemStore
+module Idp_store = Idp.FileStore (struct let path = "./bin/idps.json" end)
 module H = Handler.Make (Idp_store)
 module R = Router.Make (H)
 

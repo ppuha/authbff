@@ -1,0 +1,12 @@
+[
+  {
+    "name": "zitadel",
+    "base_url": "http://localhost:8080/oauth/v2/authorize",
+    "token_url": "http://localhost:8080/oauth/v2/token",
+    "client": {
+      "id": "281416810018963459",
+      "secret": "0hbZVND7ZJhDCXYgWWhVOaUUQvtg4lla0BDwFrVLxWEM4sflhITm584aZclSggVE",
+      "redirect_uri": "http://localhost:8844/redirect/zitadel"
+    }
+  }
+]
