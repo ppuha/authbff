@@ -17,8 +17,6 @@ let show_form (form : (string * string) list) =
   |> String.concat ", "
 
 let render_template name data =
-  let ic = open_in (Printf.sprintf "./lib/%s.mustache" name) in
-  let lines = read_lines ic in
-  let content = lines |> String.concat "\n" in
+  let content = read_file (Printf.sprintf "./lib/%s.mustache" name) in
   let templ = Mustache.of_string content in
   Mustache.render templ data |> Dream.html
