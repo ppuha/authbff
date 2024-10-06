@@ -18,7 +18,7 @@ module Make (Store : Idp.Store) = struct
       ("idps", `A (Store.get_all () |> List.map mustache_of_idp));
       ("redirect_uri", `String redirect_uri)
     ] in
-    Util.render_template "login" data
+    Util.render_template "login" data |> Dream.html
 
   let post req =
     match%lwt Dream.form ~csrf:false req with

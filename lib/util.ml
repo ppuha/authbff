@@ -19,4 +19,4 @@ let show_form (form : (string * string) list) =
 let render_template name data =
   let content = read_file (Printf.sprintf "./lib/%s.mustache" name) in
   let templ = Mustache.of_string content in
-  Mustache.render templ data |> Dream.html
+  Mustache.render templ data
