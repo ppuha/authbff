@@ -5,13 +5,19 @@ let mustache_of_idp idp =
   `O [ ("name", `String idp.name) ]
 
 module type S = sig
-  val get : Dream.request -> Dream.response Lwt.t
-  val post : Dream.request -> Dream.response Lwt.t
-  val redirect_get : Dream.request -> Dream.response Lwt.t
-  val user_get : Dream.request -> Dream.response Lwt.t
+  type request
+  type response
+  type handler = request -> response Lwt.t
+  val get : handler
+  val post : handler
+  val redirect_get : handler
+  val user_get : handler
 end
 
 module Make (Store : Idp.Store) = struct
+  type request = Dream.request
+  type response = Dream.response
+  type handler = request -> response Lwt.t
   let get req =
     let redirect_uri = Dream.query req "redirect_uri" |> Option.get in
     let data = `O [

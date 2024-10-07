@@ -71,7 +71,7 @@ module type File = sig
   val path : string
 end
 
-module FileStore (F : File)= struct
+module FileStore (F : File) = struct
   let path = F.path
 
   let get_all () =

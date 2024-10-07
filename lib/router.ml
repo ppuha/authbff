@@ -1,4 +1,8 @@
-module Make (H : Handler.S) = struct
+module Make (
+  H : Handler.S
+  with type request = Dream.request
+  with type response = Dream.response
+) = struct
   let routes ~prefix = Dream.scope prefix [] [
     Dream.get "/login" H.get;
     Dream.post "/login" H.post;
