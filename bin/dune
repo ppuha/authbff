@@ -1,5 +1,5 @@
 (executable
  (public_name authbff)
  (name main)
- (libraries authbff)
+ (libraries authbff dream)
  (preprocess (pps lwt_ppx)))
