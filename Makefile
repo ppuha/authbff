@@ -5,7 +5,7 @@ install-system-deps-ubuntu:
 
 build:
 	eval $(opam env)
-	opam install dream yojson ppx_yojson_conv mustache cohttp cohttp-lwt-unix uuidm base64
+	opam install dream yojson ppx_yojson_conv mustache cohttp cohttp-lwt-unix uuidm base64 alcotest
 	opam exec -- dune build .
 
 prepare-deployment:
