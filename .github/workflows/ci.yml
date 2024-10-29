@@ -1,0 +1,27 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: set-up OCaml
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: "5.2"
+    - name: install system deps
+      run: make install-system-deps-ubuntu
+    - name: build
+      run: make build
+    - name: prepare deployment
+      run: make prepare-deployment
+    - name: archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        path: deployment
